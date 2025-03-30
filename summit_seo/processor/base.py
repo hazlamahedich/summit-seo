@@ -2,8 +2,10 @@
 
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, Union
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
+import hashlib
+import json
 
 @dataclass
 class ProcessingResult:
@@ -16,6 +18,26 @@ class ProcessingResult:
     metadata: Dict[str, Any]
     errors: List[str]
     warnings: List[str]
+    cached: bool = False
+    cache_key: Optional[str] = None
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert the result to a dictionary.
+        
+        Returns:
+            Dictionary representation of the result
+        """
+        return {
+            'url': self.url,
+            'processing_time': self.processing_time,
+            'timestamp': self.timestamp.isoformat(),
+            'metadata': self.metadata,
+            'errors': self.errors,
+            'warnings': self.warnings,
+            'cached': self.cached,
+            'cache_key': self.cache_key
+            # Note: processed_data is excluded to avoid large dictionaries
+        }
 
 class ProcessorError(Exception):
     """Base exception for processor errors."""
@@ -36,7 +58,12 @@ class BaseProcessor(ABC):
         """Initialize the processor.
         
         Args:
-            config: Optional configuration dictionary.
+            config: Optional configuration dictionary with settings like:
+                - batch_size: Size of batches for batch processing (int)
+                - max_retries: Maximum number of retries for processing (int)
+                - enable_caching: Whether to enable caching (bool)
+                - cache_ttl: Cache time to live in seconds (int)
+                - cache_type: Type of cache to use ('memory' or 'file') (str)
         """
         self.config = config or {}
         self.validate_config()
@@ -45,6 +72,11 @@ class BaseProcessor(ABC):
         self._processed_count = 0
         self._error_count = 0
         self._start_time = None
+        
+        # Caching configuration
+        self.enable_caching = self.config.get('enable_caching', True)
+        self.cache_ttl = self.config.get('cache_ttl', 3600)  # 1 hour default
+        self.cache_type = self.config.get('cache_type', 'memory')
         
     @property
     def name(self) -> str:
@@ -88,6 +120,9 @@ class BaseProcessor(ABC):
     async def process(self, data: Dict[str, Any], url: str) -> ProcessingResult:
         """Process the input data.
         
+        This implementation checks the cache first, and only performs processing
+        if the result is not found in cache or if caching is disabled.
+        
         Args:
             data: Input data dictionary.
             url: URL associated with the data.
@@ -98,6 +133,39 @@ class BaseProcessor(ABC):
         Raises:
             ProcessorError: If processing fails.
         """
+        # Check cache if enabled
+        if self.enable_caching:
+            try:
+                from ..cache import cache_manager
+                
+                # Generate cache key
+                cache_key = self.generate_cache_key(data, url)
+                
+                # Try to get result from cache
+                cache_result = await cache_manager.get(
+                    cache_key, 
+                    cache_type=self.cache_type,
+                    name=self.get_cache_name()
+                )
+                
+                if cache_result.hit and not cache_result.expired:
+                    # Cache hit, return cached result
+                    cached_result = cache_result.value
+                    
+                    # Update metadata to indicate cached result
+                    cached_result.cached = True
+                    cached_result.cache_key = cache_key
+                    
+                    return cached_result
+                    
+            except ImportError:
+                # Cache module not available, continue with processing
+                pass
+            except Exception as e:
+                # Log cache error but continue with processing
+                import logging
+                logging.warning(f"Cache error in {self.__class__.__name__}: {str(e)}")
+        
         self._start_time = datetime.now().timestamp()
         errors = []
         warnings = []
@@ -131,7 +199,8 @@ class BaseProcessor(ABC):
         
         processing_time = datetime.now().timestamp() - self._start_time
         
-        return ProcessingResult(
+        # Create processing result
+        result = ProcessingResult(
             url=url,
             processed_data=processed_data,
             processing_time=processing_time,
@@ -140,6 +209,35 @@ class BaseProcessor(ABC):
             errors=errors,
             warnings=warnings
         )
+        
+        # Cache result if caching is enabled and no errors occurred
+        if self.enable_caching and not errors:
+            try:
+                from ..cache import cache_manager
+                
+                cache_key = self.generate_cache_key(data, url)
+                
+                # Store result in cache
+                await cache_manager.set(
+                    cache_key,
+                    result,
+                    ttl=self.cache_ttl,
+                    cache_type=self.cache_type,
+                    name=self.get_cache_name()
+                )
+                
+                # Update cache key in result
+                result.cache_key = cache_key
+                
+            except ImportError:
+                # Cache module not available, skip caching
+                pass
+            except Exception as e:
+                # Log cache error
+                import logging
+                logging.warning(f"Cache error in {self.__class__.__name__}: {str(e)}")
+        
+        return result
     
     async def process_batch(
         self,
@@ -208,7 +306,7 @@ class BaseProcessor(ABC):
             'processor_name': self.name,
             'processed_count': self.processed_count,
             'error_count': self.error_count,
-            'config': self.config
+            'config': {k: v for k, v in self.config.items() if k not in ('enable_caching', 'cache_ttl', 'cache_type')}
         }
     
     @abstractmethod
@@ -233,4 +331,53 @@ class BaseProcessor(ABC):
         Raises:
             TransformationError: If data transformation fails.
         """
-        raise NotImplementedError("Subclasses must implement _process_data") 
+        raise NotImplementedError("Subclasses must implement _process_data")
+    
+    def generate_cache_key(self, data: Dict[str, Any], url: str) -> str:
+        """Generate a cache key for the input data and URL.
+        
+        Args:
+            data: Input data
+            url: URL being processed
+            
+        Returns:
+            Cache key string
+        """
+        # Use processor class name as prefix
+        prefix = self.__class__.__name__
+        
+        # Hash the URL
+        url_hash = hashlib.md5(url.encode('utf-8')).hexdigest()[:8]
+        
+        # Hash the input data's keys and structure
+        # Note: We avoid hashing the entire data which could be large
+        data_keys = sorted(data.keys())
+        data_structure = f"{len(data)}:{','.join(data_keys)}"
+        data_hash = hashlib.md5(data_structure.encode('utf-8')).hexdigest()[:8]
+        
+        # Include relevant configuration in cache key
+        config_hash = ""
+        if self.config:
+            # Only include config keys that affect processing results
+            processing_config = {k: v for k, v in self.config.items() 
+                         if k not in ('enable_caching', 'cache_ttl', 'cache_type', 'batch_size')}
+            
+            if processing_config:
+                config_hash = f":{hashlib.md5(json.dumps(processing_config, sort_keys=True).encode('utf-8')).hexdigest()[:8]}"
+        
+        return f"{prefix}:{url_hash}:{data_hash}{config_hash}"
+    
+    def get_cache_name(self) -> Optional[str]:
+        """Get the cache name based on TTL.
+        
+        Returns:
+            Cache name (short, medium, long) or None for default
+        """
+        if self.cache_ttl <= 300:  # 5 minutes or less
+            return 'short'
+        elif self.cache_ttl <= 3600:  # 1 hour or less
+            return 'medium'
+        elif self.cache_ttl <= 86400:  # 24 hours or less
+            return 'long'
+        
+        return None 

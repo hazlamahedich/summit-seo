@@ -94,7 +94,7 @@ class BaseReporter(ABC):
         Returns:
             ReportMetadata instance.
         """
-        from ... import __version__
+        from summit_seo import __version__
         return ReportMetadata(
             timestamp=datetime.utcnow(),
             format=format,

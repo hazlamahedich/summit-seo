@@ -4,18 +4,42 @@ from abc import ABC, abstractmethod
 from typing import Dict, Any, Optional, List
 import asyncio
 import time
-from dataclasses import dataclass
+import hashlib
+import json
+from dataclasses import dataclass, field
+from datetime import datetime
 from urllib.parse import urlparse
 
 @dataclass
 class CollectionResult:
     """Data class for collection results."""
     url: str
-    html_content: str
+    content: str
     status_code: int
     headers: Dict[str, str]
     collection_time: float
-    metadata: Dict[str, Any]
+    timestamp: datetime = field(default_factory=datetime.now)
+    metadata: Dict[str, Any] = field(default_factory=dict)
+    cached: bool = False
+    cache_key: Optional[str] = None
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert the result to a dictionary.
+        
+        Returns:
+            Dictionary representation of the result
+        """
+        return {
+            'url': self.url,
+            'status_code': self.status_code,
+            'collection_time': self.collection_time,
+            'timestamp': self.timestamp.isoformat(),
+            'metadata': self.metadata,
+            'headers': {k: v for k, v in self.headers.items() if isinstance(v, str)},
+            'cached': self.cached,
+            'cache_key': self.cache_key
+            # Note: content is excluded to avoid large dictionaries
+        }
 
 class CollectorError(Exception):
     """Base exception for collector errors."""
@@ -43,6 +67,9 @@ class BaseCollector(ABC):
                 - retry_delay: Delay between retries in seconds (float)
                 - headers: Custom headers for requests (Dict[str, str])
                 - verify_ssl: Whether to verify SSL certificates (bool)
+                - enable_caching: Whether to enable caching (bool)
+                - cache_ttl: Cache time to live in seconds (int)
+                - cache_type: Type of cache to use ('memory' or 'file') (str)
         """
         self.config = config or {}
         self._last_request_time = 0.0
@@ -55,9 +82,17 @@ class BaseCollector(ABC):
         self.retry_delay = float(self.config.get('retry_delay', 1.0))
         self.headers = self.config.get('headers', {})
         self.verify_ssl = bool(self.config.get('verify_ssl', True))
+        
+        # Caching configuration
+        self.enable_caching = self.config.get('enable_caching', True)
+        self.cache_ttl = self.config.get('cache_ttl', 3600)  # 1 hour default
+        self.cache_type = self.config.get('cache_type', 'memory')
 
     async def collect(self, url: str) -> CollectionResult:
         """Collect data from the specified URL.
+        
+        This implementation checks the cache first, and only performs collection
+        if the result is not found in cache or if caching is disabled.
         
         Args:
             url: The URL to collect data from.
@@ -76,6 +111,39 @@ class BaseCollector(ABC):
                 raise CollectorError(f"Invalid URL format: {url}")
         except Exception as e:
             raise CollectorError(f"URL parsing error: {str(e)}")
+        
+        # Check cache if enabled
+        if self.enable_caching:
+            try:
+                from ..cache import cache_manager
+                
+                # Generate cache key
+                cache_key = self.generate_cache_key(url)
+                
+                # Try to get result from cache
+                cache_result = await cache_manager.get(
+                    cache_key, 
+                    cache_type=self.cache_type,
+                    name=self.get_cache_name()
+                )
+                
+                if cache_result.hit and not cache_result.expired:
+                    # Cache hit, return cached result
+                    cached_result = cache_result.value
+                    
+                    # Update metadata to indicate cached result
+                    cached_result.cached = True
+                    cached_result.cache_key = cache_key
+                    
+                    return cached_result
+                    
+            except ImportError:
+                # Cache module not available, continue with collection
+                pass
+            except Exception as e:
+                # Log cache error but continue with collection
+                import logging
+                logging.warning(f"Cache error in {self.__class__.__name__}: {str(e)}")
 
         # Apply rate limiting
         await self._apply_rate_limit()
@@ -87,14 +155,46 @@ class BaseCollector(ABC):
                 result = await self._collect_data(url)
                 collection_time = time.time() - start_time
                 
-                return CollectionResult(
+                # Create collection result
+                collection_result = CollectionResult(
                     url=url,
-                    html_content=result['html_content'],
+                    content=result['content'],
                     status_code=result['status_code'],
                     headers=result['headers'],
                     collection_time=collection_time,
-                    metadata=result.get('metadata', {})
+                    metadata=result.get('metadata', {}),
+                    timestamp=datetime.now()
                 )
+                
+                # Cache result if caching is enabled
+                if self.enable_caching:
+                    try:
+                        from ..cache import cache_manager
+                        
+                        cache_key = self.generate_cache_key(url)
+                        
+                        # Store result in cache
+                        await cache_manager.set(
+                            cache_key,
+                            collection_result,
+                            ttl=self.cache_ttl,
+                            cache_type=self.cache_type,
+                            name=self.get_cache_name()
+                        )
+                        
+                        # Update cache key in result
+                        collection_result.cache_key = cache_key
+                        
+                    except ImportError:
+                        # Cache module not available, skip caching
+                        pass
+                    except Exception as e:
+                        # Log cache error
+                        import logging
+                        logging.warning(f"Cache error in {self.__class__.__name__}: {str(e)}")
+                
+                return collection_result
+                
             except Exception as e:
                 if attempt == self.max_retries - 1:
                     raise CollectionError(f"Collection failed after {self.max_retries} attempts: {str(e)}")
@@ -129,7 +229,7 @@ class BaseCollector(ABC):
             
         Returns:
             Dictionary containing:
-                - html_content: The HTML content as string
+                - content: The HTML content as string
                 - status_code: HTTP status code
                 - headers: Response headers
                 - metadata: Optional additional metadata
@@ -154,4 +254,50 @@ class BaseCollector(ABC):
         if self.max_retries < 0:
             raise ValueError("max_retries cannot be negative")
         if self.retry_delay < 0:
-            raise ValueError("retry_delay cannot be negative") 
+            raise ValueError("retry_delay cannot be negative")
+            
+    def generate_cache_key(self, url: str) -> str:
+        """Generate a cache key for the URL.
+        
+        Args:
+            url: The URL to generate a cache key for
+            
+        Returns:
+            Cache key string
+        """
+        # Use collector class name as prefix
+        prefix = self.__class__.__name__
+        
+        # Hash the URL and any relevant configuration
+        url_hash = hashlib.md5(url.encode('utf-8')).hexdigest()
+        
+        # Include relevant configuration in cache key
+        config_hash = ""
+        if self.config:
+            # Only include config keys that affect collection results
+            collection_config = {
+                'headers': self.headers,
+                'verify_ssl': self.verify_ssl,
+                'timeout': self.timeout
+            }
+            
+            if collection_config:
+                config_hash = hashlib.md5(json.dumps(collection_config, sort_keys=True).encode('utf-8')).hexdigest()[:8]
+                return f"{prefix}:{url_hash}:{config_hash}"
+        
+        return f"{prefix}:{url_hash}"
+    
+    def get_cache_name(self) -> Optional[str]:
+        """Get the cache name based on TTL.
+        
+        Returns:
+            Cache name (short, medium, long) or None for default
+        """
+        if self.cache_ttl <= 300:  # 5 minutes or less
+            return 'short'
+        elif self.cache_ttl <= 3600:  # 1 hour or less
+            return 'medium'
+        elif self.cache_ttl <= 86400:  # 24 hours or less
+            return 'long'
+        
+        return None 

@@ -1,5 +1,5 @@
-"""Command-line interface module for Summit SEO."""
+"""Command-line interface components for Summit SEO."""
 
-from .main import cli
+from summit_seo.cli.progress_display import CLIProgressDisplay, DisplayStyle
 
-__all__ = ['cli'] 
+__all__ = ['CLIProgressDisplay', 'DisplayStyle'] 

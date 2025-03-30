@@ -24,12 +24,18 @@ from .json_reporter import JSONReporter
 from .csv_reporter import CSVReporter
 from .xml_reporter import XMLReporter
 from .pdf_reporter import PDFReporter
+from .yaml_reporter import YAMLReporter
+from .visual_report import VisualReportGenerator
+from .visual_html_reporter import VisualHTMLReporter
 
 # Register reporters with the factory
-ReporterFactory.register('json', JSONReporter)
-ReporterFactory.register('html', HTMLReporter)
-ReporterFactory.register('xml', XMLReporter)
-ReporterFactory.register('pdf', PDFReporter)
+ReporterFactory.register('HTMLReporter', HTMLReporter)
+ReporterFactory.register('JSONReporter', JSONReporter)
+ReporterFactory.register('CSVReporter', CSVReporter)
+ReporterFactory.register('XMLReporter', XMLReporter)
+ReporterFactory.register('PDFReporter', PDFReporter)
+ReporterFactory.register('YAMLReporter', YAMLReporter)
+ReporterFactory.register('VisualHTMLReporter', VisualHTMLReporter)
 
 __all__ = [
     'BaseReporter',
@@ -46,5 +52,8 @@ __all__ = [
     'JSONReporter',
     'CSVReporter',
     'XMLReporter',
-    'PDFReporter'
+    'PDFReporter',
+    'YAMLReporter',
+    'VisualReportGenerator',
+    'VisualHTMLReporter'
 ] 

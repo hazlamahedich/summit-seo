@@ -1,93 +1,124 @@
 """YAML reporter implementation."""
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 from datetime import datetime
+from pathlib import Path
 
 import yaml
 
-from .base import BaseReporter, Report, InputType
+from .base import BaseReporter, ReportResult, ReportGenerationError
 
+class YAMLReporter(BaseReporter):
+    """Reporter that generates reports in YAML format."""
 
-class YAMLReporter(BaseReporter[Dict[str, Any]]):
-    """Reporter that generates reports in YAML format.
-    
-    This reporter takes dictionary input data and produces YAML formatted reports.
-    It includes options for customizing the YAML output format.
-    """
-
-    def __init__(self, config: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(self, config: Optional[Dict[str, Any]] = None):
         """Initialize the YAML reporter.
         
         Args:
-            config: Optional configuration dictionary that may include:
+            config: Optional configuration dictionary. Supported keys:
                 - default_flow_style: YAML flow style (default: False)
                 - indent: Number of spaces for indentation (default: 2)
                 - allow_unicode: Whether to allow unicode (default: True)
                 - sort_keys: Whether to sort dictionary keys (default: True)
         """
-        super().__init__(config or {})
-        self.default_flow_style = self.config.get('default_flow_style', False)
-        self.indent = self.config.get('indent', 2)
-        self.allow_unicode = self.config.get('allow_unicode', True)
-        self.sort_keys = self.config.get('sort_keys', True)
-
-    def generate_report(self, data: Dict[str, Any], report_format: str = 'yaml') -> Report:
-        """Generate a YAML report from the input data.
+        super().__init__(config)
         
-        Args:
-            data: Dictionary containing the data to be reported
-            report_format: Must be 'yaml' (ignored as this is a YAML-specific reporter)
-            
-        Returns:
-            Report object containing the YAML formatted data
-            
+    def validate_config(self) -> None:
+        """Validate the reporter configuration.
+        
         Raises:
-            ReportingError: If data validation fails
+            ValueError: If configuration is invalid.
         """
-        self.validate_data(data)
-        self.validate_format(report_format)
-        
-        metadata = self.create_metadata(report_type='yaml')
-        formatted_data = self.format_data(data)
-        
-        return Report(
-            data=formatted_data,
-            metadata=metadata
-        )
-
-    def format_data(self, data: Dict[str, Any]) -> str:
-        """Format the data as a YAML string.
+        if 'indent' in self.config and not isinstance(self.config['indent'], int):
+            raise ValueError("Indent must be an integer")
+            
+    async def generate_report(self, data: Dict[str, Any]) -> ReportResult:
+        """Generate a YAML report from the analysis results.
         
         Args:
-            data: Dictionary to be converted to YAML
-            
+            data: Dictionary containing analysis results.
+        
         Returns:
-            YAML formatted string
+            ReportResult containing the generated YAML and metadata.
+        
+        Raises:
+            ReportGenerationError: If report generation fails.
         """
         try:
-            return yaml.dump(
-                data,
-                default_flow_style=self.default_flow_style,
-                indent=self.indent,
-                allow_unicode=self.allow_unicode,
-                sort_keys=self.sort_keys,
-                default_style=None,
-                Dumper=self._get_yaml_dumper()
+            self._validate_data(data)
+            
+            # Set YAML dumper options
+            yaml_options = {
+                'default_flow_style': self.config.get('default_flow_style', False),
+                'indent': self.config.get('indent', 2),
+                'allow_unicode': self.config.get('allow_unicode', True),
+                'sort_keys': self.config.get('sort_keys', True)
+            }
+            
+            # Convert data to YAML
+            yaml_content = yaml.dump(data, **yaml_options)
+            
+            # Get the output file path from the data or use a default
+            output_file = data.get('output_file', 'seo_report.yaml')
+            
+            # If output_file is a Path object, convert to string
+            if isinstance(output_file, Path):
+                output_file = str(output_file)
+            
+            # Write the report to the output file
+            with open(output_file, 'w', encoding='utf-8') as f:
+                f.write(yaml_content)
+            
+            # Create the report result
+            result = ReportResult(
+                content=yaml_content,
+                format='yaml',
+                path=output_file,
+                metadata={
+                    'timestamp': data.get('timestamp', datetime.now().isoformat()),
+                    'url': data.get('url', 'Unknown')
+                }
             )
+            
+            return result
+            
         except Exception as e:
-            raise self.error_type(f"Failed to format data as YAML: {str(e)}")
-
-    def _get_yaml_dumper(self) -> type:
-        """Get a configured YAML Dumper class.
+            raise ReportGenerationError(f"Failed to generate YAML report: {str(e)}") from e
+            
+    async def generate_batch_report(self, data: List[Dict[str, Any]]) -> ReportResult:
+        """Generate a batch YAML report from multiple analysis results.
+        
+        Args:
+            data: List of dictionaries containing analysis results.
         
         Returns:
-            A YAML Dumper class configured to handle datetime objects
+            ReportResult containing the generated YAML and metadata.
+        
+        Raises:
+            ReportGenerationError: If report generation fails.
         """
-        class DatetimeDumper(yaml.SafeDumper):
-            pass
-        
-        def datetime_representer(dumper: yaml.SafeDumper, data: datetime) -> yaml.ScalarNode:
-            return dumper.represent_scalar('tag:yaml.org,2002:timestamp', data.isoformat())
-        
-        DatetimeDumper.add_representer(datetime, datetime_representer)
-        return DatetimeDumper 
+        try:
+            if not data:
+                raise ValueError("No data provided for batch report")
+            
+            # Aggregate the results
+            aggregated_data = {
+                'url': 'Multiple URLs',
+                'timestamp': datetime.now().isoformat(),
+                'urls': [item.get('url', 'Unknown') for item in data],
+                'results': {}
+            }
+            
+            # Combine all results
+            for item in data:
+                if 'results' in item and isinstance(item['results'], dict):
+                    for analyzer, result in item['results'].items():
+                        if analyzer not in aggregated_data['results']:
+                            aggregated_data['results'][analyzer] = []
+                        aggregated_data['results'][analyzer].append(result)
+            
+            # Generate the report
+            return await self.generate_report(aggregated_data)
+            
+        except Exception as e:
+            raise ReportGenerationError(f"Failed to generate batch YAML report: {str(e)}") from e 

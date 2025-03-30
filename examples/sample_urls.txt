@@ -1,0 +1,13 @@
+# Sample URLs for batch processing
+# Lines starting with # are comments and will be ignored
+# Empty lines are also ignored
+
+https://example.com
+https://mozilla.org
+https://developer.mozilla.org
+https://web.dev
+https://www.python.org
+
+# More complex websites for testing
+https://github.com
+https://stackoverflow.com 

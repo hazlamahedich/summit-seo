@@ -1,0 +1,127 @@
+# Summit SEO Project Intelligence
+
+## Architecture Patterns
+
+### Component Structure
+- All analyzers inherit from BaseAnalyzer class
+- Analyzers implement the _analyze method as their core functionality
+- Results are standardized using the AnalysisResult class
+- Factory pattern used for analyzer creation and registration
+- Each analyzer implements a compute_score method with its own scoring logic
+
+### Security Analyzer Patterns
+- Modular security checks separated into individual methods
+- Each security check returns a severity level and remediation steps
+- Security issues are categorized by severity (Critical, High, Medium, Low)
+- Overall security score starts at 100 and deducts based on severity
+- HTML parsing leverages BeautifulSoup throughout the codebase
+- Regular expressions used for sensitive data pattern matching
+- External resource detection uses URL parsing and protocol validation
+
+## Code Conventions
+
+### Naming Conventions
+- Analyzer classes use CamelCase and end with "Analyzer"
+- Internal methods start with underscore (e.g., _analyze_https)
+- Constants are UPPER_SNAKE_CASE
+- Utility functions are snake_case
+- Test methods follow pytest's test_* naming convention
+
+### Implementation Patterns
+- Private methods are used for internal functionality
+- Public methods provide the interface for external usage
+- Configuration parameters are passed via constructor
+- Analysis results include both scores and detailed findings
+- Security checks return tuples with (severity, message, remediation)
+- Severity levels use the Severity enum (CRITICAL, HIGH, MEDIUM, LOW)
+
+## Testing Patterns
+
+### Test Structure
+- Each analyzer has a dedicated test file in tests/analyzer/
+- Tests use pytest fixtures for setup and teardown
+- Mock HTML content is used for testing parsing logic
+- Expected results are explicitly defined for validation
+- Edge cases are tested separately from normal cases
+- Integration with factory is tested in factory tests
+
+### Security Testing
+- Each security check has dedicated test cases
+- Tests validate both positive (secure) and negative (insecure) scenarios
+- Mock HTTP responses are used to simulate headers
+- Severity levels are validated in tests
+- Remediation recommendations are verified
+
+## Documentation Standards
+
+### Code Documentation
+- Class docstrings explain purpose and usage
+- Method docstrings follow Google style format
+- Parameters and return values are documented
+- Public methods have comprehensive docstrings
+- Private methods have brief explanations
+
+### Project Documentation
+- Memory Bank maintains current project status
+- Design decisions are documented in systemPatterns.md
+- Technical context is maintained in techContext.md
+- Active development focus in activeContext.md
+- Implementation progress tracked in progress.md
+
+## Development Workflow
+
+### Feature Implementation
+1. Update memory bank with design plans
+2. Create test file with comprehensive test cases
+3. Implement base class structure
+4. Implement individual methods
+5. Register with factory
+6. Run and fix tests
+7. Update documentation
+8. Update memory bank with completion status
+
+### Security Analyzer Pattern
+1. Implement base security checks first (HTTPS, cookies)
+2. Add detection mechanisms for each security issue
+3. Implement severity classification
+4. Add detailed remediation recommendations
+5. Implement scoring algorithm
+6. Test against various security scenarios
+7. Document security methodology
+
+## Known Issues and Challenges
+
+### Factory Implementation
+- Type checking issues in factory implementation
+- Inheritance validation needs refinement
+- Factory tests failing need to be addressed
+
+### Meta Analyzer Issues
+- Import errors in the test file for Meta Analyzer
+
+### Project Optimization Needs
+- Performance optimization for large sites needed
+- Memory usage can be improved for complex parsing operations
+
+## User Experience Insights
+
+### Security Analyzer Output
+- Technical users need detailed findings with code references
+- Non-technical users need clear explanations of security implications
+- All users benefit from prioritized recommendations
+- Remediation steps should be actionable with examples
+- Visual scoring helps communicate severity effectively
+
+## Future Development Guidance
+
+### Security Analyzer Extensions
+- Add more sophisticated XSS detection patterns
+- Enhance outdated library detection with broader database
+- Implement cookie policy compliance checking
+- Add CSRF protection validation
+- Enhance API key pattern detection with more formats
+
+### Integration Opportunities
+- Security Analyzer findings should influence overall SEO score
+- Security recommendations should link to documentation
+- Security checks should be configurable for different compliance standards 
