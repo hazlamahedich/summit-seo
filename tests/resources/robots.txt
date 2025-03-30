@@ -1,0 +1,40 @@
+# Sample robots.txt for testing the robots.txt Processor
+
+User-agent: *
+Disallow: /admin/
+Disallow: /private/
+Disallow: /cart/checkout
+Allow: /public/
+Crawl-delay: 5
+
+# Google Bot specific rules
+User-agent: Googlebot
+Disallow: /nogooglebot/
+Allow: /
+Crawl-delay: 2
+
+# Bing Bot specific rules
+User-agent: Bingbot
+Disallow: /nobingbot/
+Allow: /
+Crawl-delay: 3
+
+# Block image indexing
+User-agent: Googlebot-Image
+Disallow: /images/private/
+
+# Invalid directive for testing
+Noindex: /testing/
+
+# Sitemap declarations
+Sitemap: https://example.com/sitemap.xml
+Sitemap: https://example.com/products/sitemap.xml
+
+# Comment with URL https://example.com/this-is-just-a-comment
+
+# Malformed directive
+User-Agent Googlebot-News
+Disallow /news/embargo/
+
+# Host directive (non-standard)
+Host: example.com 

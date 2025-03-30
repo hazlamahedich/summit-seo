@@ -1,0 +1,44 @@
+{
+    "collector": {
+        "requests_per_second": 2,
+        "timeout": 30,
+        "max_retries": 3,
+        "retry_delay": 5,
+        "headers": {
+            "User-Agent": "Summit SEO Bot/1.0"
+        },
+        "verify_ssl": true
+    },
+    "processor": {
+        "parser": "html.parser",
+        "clean_whitespace": true,
+        "normalize_urls": true,
+        "remove_comments": true,
+        "extract_metadata": true
+    },
+    "analyzers": {
+        "title": {
+            "min_length": 30,
+            "max_length": 60,
+            "brand_position": "end",
+            "brand_separator": "|"
+        },
+        "meta_description": {
+            "min_length": 120,
+            "max_length": 155,
+            "keyword_density": 0.5
+        },
+        "content": {
+            "min_word_count": 300,
+            "heading_depth": 3,
+            "keyword_density": 0.5,
+            "readability_target": "general"
+        },
+        "image_seo": {
+            "check_alt_text": true,
+            "check_dimensions": true,
+            "max_file_size": 500000,
+            "preferred_formats": ["webp", "jpg", "png"]
+        }
+    }
+} 

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sample page for testing Summit SEO toolkit integration">
+    <title>Sample Page for Summit SEO Testing</title>
+    <link rel="canonical" href="https://example.com/sample">
+    
+    <!-- Schema.org markup for Article -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Sample Article for SEO Testing",
+        "author": {
+            "@type": "Person",
+            "name": "Test Author"
+        },
+        "datePublished": "2023-03-15T09:00:00+00:00",
+        "dateModified": "2023-03-25T14:30:00+00:00",
+        "description": "This is a sample article used for testing schema.org structured data"
+    }
+    </script>
+    
+    <!-- Schema.org markup for Product -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "Summit SEO Toolkit",
+        "description": "Comprehensive SEO analysis toolkit",
+        "brand": {
+            "@type": "Brand",
+            "name": "Summit SEO"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "99.99",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        header {
+            background-color: #f5f5f5;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        .container {
+            display: flex;
+            gap: 2rem;
+        }
+        main {
+            flex: 3;
+        }
+        aside {
+            flex: 1;
+            background-color: #f9f9f9;
+            padding: 1rem;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .img-without-alt {
+            border: 1px solid #ddd;
+        }
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            cursor: pointer;
+        }
+        /* Empty button without accessible text */
+        .empty-button {
+            width: 40px;
+            height: 40px;
+        }
+        /* Form with input missing labels */
+        .search-form input {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Summit SEO Test Page</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/services">Services</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <main>
+            <h2>Content Analyzer Testing</h2>
+            <p>This page is designed to test various aspects of the Summit SEO Content Analyzer. It contains structural elements, links, images, and other content that can be analyzed for SEO optimization.</p>
+            
+            <h3>Headings Structure</h3>
+            <p>The headings on this page follow a hierarchical structure, with H1 at the top, followed by H2 sections, and H3 subsections. This helps create a logical document outline.</p>
+            
+            <h3>Images with Alt Text</h3>
+            <p>Images on a webpage should include descriptive alt text to improve accessibility and SEO.</p>
+            <img src="example-image.jpg" alt="Example image showing good alt text practices" width="800" height="600">
+            
+            <h3>Images without Alt Text</h3>
+            <p>Some images on this page deliberately lack alt text to test detection of accessibility issues:</p>
+            <img src="missing-alt.jpg" class="img-without-alt" width="800" height="600">
+            
+            <h2>Link Analysis Testing</h2>
+            <p>This section contains various types of links to test the link analysis functionality:</p>
+            <ul>
+                <li><a href="/internal-link">Internal link to another page</a></li>
+                <li><a href="https://example.com/another-page">Internal link with full domain</a></li>
+                <li><a href="https://external-site.com">External link</a></li>
+                <li><a href="https://external-site-nofollow.com" rel="nofollow">External nofollow link</a></li>
+                <li><a href="mailto:info@example.com">Email link</a></li>
+                <li><a href="/broken-link" class="broken">Broken link</a></li>
+            </ul>
+            
+            <h2>Accessibility Testing</h2>
+            <form class="search-form">
+                <!-- Input without a label for accessibility testing -->
+                <input type="text" placeholder="Search...">
+                <button type="submit">Search</button>
+            </form>
+            
+            <!-- Empty button without text for accessibility testing -->
+            <button class="empty-button"></button>
+            
+            <h2>Content Freshness</h2>
+            <p>Published: <time datetime="2023-03-15">March 15, 2023</time></p>
+            <p>Last Updated: <time datetime="2023-03-25">March 25, 2023</time></p>
+            
+            <h2>Keyword Density</h2>
+            <p>This page mentions SEO content analyzer multiple times to test keyword density analysis. The Summit SEO Toolkit can detect keyword density and help optimize content.</p>
+            <p>The content analyzer evaluates various aspects of web content including keyword usage, readability, and structure.</p>
+            
+            <h3>Readability Test</h3>
+            <p>This paragraph is designed to test readability metrics. It uses simple language, short sentences, and avoids complex terminology. The Summit SEO content analyzer can evaluate the readability of text and suggest improvements.</p>
+            
+            <h3>Long Paragraph Test</h3>
+            <p>This paragraph is intentionally long to test how the content analyzer handles extended text blocks. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget felis eget urna ultrices maximus. Sed vitae felis eu nisi venenatis lacinia. Vivamus tincidunt, neque at pulvinar egestas, neque lorem feugiat nisi, at feugiat eros erat eu lectus. Suspendisse potenti. Mauris quis nisl ut urna pharetra lobortis. Maecenas porttitor quam eu erat convallis, ac fermentum arcu lobortis. Curabitur tincidunt purus non justo finibus, vel tincidunt nisl tristique. Nullam faucibus elit vel tellus ultricies, vel luctus enim tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Fusce faucibus blandit augue, sit amet venenatis orci. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec tincidunt convallis neque, id malesuada velit tristique non.</p>
+        </main>
+        
+        <aside>
+            <h3>Related Content</h3>
+            <ul>
+                <li><a href="/seo-tips">SEO Tips and Tricks</a></li>
+                <li><a href="/content-optimization">Content Optimization Guide</a></li>
+                <li><a href="/technical-seo">Technical SEO</a></li>
+            </ul>
+            
+            <h3>Contact Us</h3>
+            <p>Email: info@example.com</p>
+            <p>Phone: (555) 123-4567</p>
+        </aside>
+    </div>
+    
+    <footer>
+        <p>&copy; 2023 Summit SEO Testing. All rights reserved.</p>
+        <div>
+            <a href="/privacy">Privacy Policy</a> | 
+            <a href="/terms">Terms of Service</a> | 
+            <a href="/sitemap">Sitemap</a>
+        </div>
+    </footer>
+    
+    <!-- Sample JavaScript for JS Processor testing -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded for Summit SEO testing');
+            
+            // Track some basic metrics
+            const metrics = {
+                images: document.querySelectorAll('img').length,
+                links: document.querySelectorAll('a').length,
+                paragraphs: document.querySelectorAll('p').length
+            };
+            
+            console.log('Page metrics:', metrics);
+        });
+    </script>
+</body>
+</html> 

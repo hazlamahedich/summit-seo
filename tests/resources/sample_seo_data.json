@@ -1,0 +1,140 @@
+{
+  "site_info": {
+    "url": "https://example.com",
+    "title": "Example Website - Sample SEO Data",
+    "scan_date": "2023-07-15T10:30:00Z",
+    "score": 75
+  },
+  "overview": {
+    "total_pages": 150,
+    "pages_with_issues": 42,
+    "critical_issues": 8,
+    "warnings": 24,
+    "suggestions": 37
+  },
+  "page_speed": {
+    "mobile": {
+      "score": 68,
+      "first_contentful_paint": 1.8,
+      "largest_contentful_paint": 3.2,
+      "time_to_interactive": 4.5,
+      "cumulative_layout_shift": 0.05
+    },
+    "desktop": {
+      "score": 82,
+      "first_contentful_paint": 0.9,
+      "largest_contentful_paint": 1.6,
+      "time_to_interactive": 2.1,
+      "cumulative_layout_shift": 0.02
+    }
+  },
+  "top_issues": [
+    {
+      "type": "critical",
+      "description": "Missing meta descriptions",
+      "affected_pages": 28,
+      "impact": "High",
+      "recommendation": "Add unique meta descriptions to all pages"
+    },
+    {
+      "type": "critical",
+      "description": "Duplicate title tags",
+      "affected_pages": 15,
+      "impact": "High",
+      "recommendation": "Create unique title tags for each page"
+    },
+    {
+      "type": "warning",
+      "description": "Slow page load times",
+      "affected_pages": 22,
+      "impact": "Medium",
+      "recommendation": "Optimize images and minimize JavaScript"
+    },
+    {
+      "type": "warning",
+      "description": "Missing alt text on images",
+      "affected_pages": 34,
+      "impact": "Medium",
+      "recommendation": "Add descriptive alt text to all images"
+    },
+    {
+      "type": "suggestion",
+      "description": "Low word count on key pages",
+      "affected_pages": 12,
+      "impact": "Low",
+      "recommendation": "Expand content to at least 500 words per page"
+    }
+  ],
+  "content_analysis": {
+    "total_word_count": 85600,
+    "average_words_per_page": 570,
+    "keyword_density": {
+      "example products": 2.3,
+      "buy online": 1.8,
+      "high quality": 1.5,
+      "free shipping": 1.2
+    },
+    "readability": {
+      "score": 72,
+      "grade_level": "8th Grade",
+      "complex_sentences": 105,
+      "passive_voice_percentage": 18
+    }
+  },
+  "backlink_profile": {
+    "total_backlinks": 1250,
+    "unique_domains": 320,
+    "dofollow_links": 875,
+    "nofollow_links": 375,
+    "top_anchor_texts": [
+      {"text": "example website", "count": 125},
+      {"text": "click here", "count": 98},
+      {"text": "example products", "count": 87},
+      {"text": "official site", "count": 65}
+    ]
+  },
+  "technical_issues": {
+    "broken_links": 23,
+    "redirect_chains": 12,
+    "pages_with_duplicate_content": 15,
+    "missing_h1_tags": 8,
+    "improper_heading_structure": 19,
+    "pages_with_low_text_html_ratio": 26
+  },
+  "mobile_usability": {
+    "viewport_configuration_issues": 5,
+    "touch_elements_too_close": 14,
+    "content_wider_than_screen": 7,
+    "text_too_small_to_read": 10
+  },
+  "competitors": [
+    {
+      "domain": "competitor1.com",
+      "ranking_keywords": 1850,
+      "estimated_traffic": 25000,
+      "domain_authority": 45
+    },
+    {
+      "domain": "competitor2.com",
+      "ranking_keywords": 2100,
+      "estimated_traffic": 32000,
+      "domain_authority": 52
+    },
+    {
+      "domain": "competitor3.com",
+      "ranking_keywords": 1200,
+      "estimated_traffic": 18000,
+      "domain_authority": 38
+    }
+  ],
+  "recommendations": [
+    "Implement a content strategy focused on expanding thin content pages",
+    "Fix all critical meta tag issues including duplicate and missing title/description tags",
+    "Optimize the 22 slow-loading pages to improve Core Web Vitals scores",
+    "Implement schema markup on product and review pages",
+    "Fix broken links and redirect chains to improve crawlability",
+    "Add alt text to all images for better accessibility and SEO",
+    "Improve mobile usability by fixing viewport and touch element issues",
+    "Create a strategy to increase quality backlinks from relevant domains"
+  ]
+} 

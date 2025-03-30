@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+                            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <!-- Homepage -->
+  <url>
+    <loc>https://example.com/</loc>
+    <lastmod>2023-06-15T09:13:45+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- About page -->
+  <url>
+    <loc>https://example.com/about</loc>
+    <lastmod>2023-05-20T14:22:31+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Blog page with images -->
+  <url>
+    <loc>https://example.com/blog/article-1</loc>
+    <lastmod>2023-06-10T11:45:22+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://example.com/images/article1-hero.jpg</image:loc>
+      <image:title>Main Image for Article 1</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://example.com/images/article1-thumbnail.jpg</image:loc>
+      <image:caption>Thumbnail image for sharing</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Product page -->
+  <url>
+    <loc>https://example.com/products/product-1</loc>
+    <lastmod>2023-06-12T08:32:17+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Contact page with no priority set (for testing) -->
+  <url>
+    <loc>https://example.com/contact</loc>
+    <lastmod>2023-05-01T15:30:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <!-- Malformed URL for testing -->
+  <url>
+    <loc>example.com/malformed</loc>
+    <lastmod>2023-06-01T10:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- URL with invalid date format for testing -->
+  <url>
+    <loc>https://example.com/invalid-date</loc>
+    <lastmod>2023/06/01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- URL with invalid priority value for testing -->
+  <url>
+    <loc>https://example.com/invalid-priority</loc>
+    <lastmod>2023-06-01T10:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.5</priority>
+  </url>
+
+  <!-- News article for testing news sitemap features -->
+  <url>
+    <loc>https://example.com/news/latest-article</loc>
+    <news:news>
+      <news:publication>
+        <news:name>Example News</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2023-06-14T22:00:00+00:00</news:publication_date>
+      <news:title>Latest News Article Title</news:title>
+    </news:news>
+    <lastmod>2023-06-14T22:00:00+00:00</lastmod>
+    <priority>0.7</priority>
+  </url>
+</urlset> 
