@@ -1,0 +1,90 @@
+.progress-container {
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  margin: var(--spacing-xs) 0;
+}
+
+.progress {
+  height: 100%;
+  border-radius: var(--border-radius-sm);
+  transition: width var(--transition-medium);
+}
+
+/* Progress variants */
+.excellent {
+  background-color: var(--success-color);
+}
+
+.good {
+  background-color: var(--primary-color);
+}
+
+.fair {
+  background-color: var(--warning-color);
+}
+
+.poor {
+  background-color: var(--danger-color);
+}
+
+/* Label */
+.label {
+  position: absolute;
+  right: var(--spacing-xs);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  padding: 0 var(--spacing-xs);
+}
+
+/* Progress container with label needs more height */
+.progress-container.with-label {
+  height: 20px;
+}
+
+/* Animated variant */
+.animated .progress {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+  animation: progress-animation 1s linear infinite;
+}
+
+@keyframes progress-animation {
+  0% {
+    background-position: 1rem 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 576px) {
+  .progress-container {
+    height: 6px;
+  }
+  
+  .progress-container.with-label {
+    height: 18px;
+  }
+  
+  .label {
+    font-size: calc(var(--font-size-xs) - 1px);
+  }
+} 

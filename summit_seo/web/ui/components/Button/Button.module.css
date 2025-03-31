@@ -1,0 +1,118 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-quick);
+  border: none;
+  outline: none;
+  gap: var(--spacing-sm);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+/* Button variants */
+.button-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.button-primary:hover:not(.disabled),
+.button-primary:focus:not(.disabled) {
+  background-color: var(--primary-dark);
+}
+
+.button-secondary {
+  background-color: white;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.button-secondary:hover:not(.disabled),
+.button-secondary:focus:not(.disabled) {
+  background-color: var(--border-light);
+  border-color: var(--border-dark);
+}
+
+.button-danger {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.button-danger:hover:not(.disabled),
+.button-danger:focus:not(.disabled) {
+  background-color: var(--danger-dark);
+}
+
+.button-success {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.button-success:hover:not(.disabled),
+.button-success:focus:not(.disabled) {
+  background-color: var(--success-dark);
+}
+
+/* Button sizes */
+.button-sm {
+  padding: calc(var(--spacing-xs) + 2px) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  height: 32px;
+}
+
+.button-md {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-md);
+  height: 40px;
+}
+
+.button-lg {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-lg);
+  height: 48px;
+}
+
+/* Disabled state */
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Button with icon only */
+.icon-only {
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--border-radius-round);
+}
+
+.button-size-md.icon-only {
+  width: 40px;
+  height: 40px;
+}
+
+.button-size-lg.icon-only {
+  width: 48px;
+  height: 48px;
+}
+
+/* Button icon and text */
+.button-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-text {
+  line-height: 1;
+}
+
+/* Focus state for accessibility */
+.button:focus-visible {
+  outline: 3px solid var(--primary-light);
+  outline-offset: 2px;
+} 

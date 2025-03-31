@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summit SEO - Site Settings</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-color: #333;
+            --background-color: #f5f7fa;
+            --card-background: #fff;
+            --border-color: #e1e4e8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1.5rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item {
+            padding: 0.75rem 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-item.active {
+            color: var(--secondary-color);
+        }
+
+        .nav-item:hover {
+            color: var(--primary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .button {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .button-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .button-secondary {
+            background-color: white;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .button-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        /* Settings Navigation */
+        .settings-navigation {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .settings-tabs {
+            display: flex;
+            gap: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-tab {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .settings-tab.active {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: var(--primary-color);
+        }
+
+        /* Settings Section */
+        .settings-section {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .settings-section-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .settings-section-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        /* Form Elements */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-hint {
+            display: block;
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            font-size: 0.95rem;
+            background-color: white;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-checkbox {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary-color);
+        }
+
+        input:focus + .toggle-slider {
+            box-shadow: 0 0 1px var(--primary-color);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Settings Footer */
+        .settings-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding-top: 1rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Slider */
+        .slider-container {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            border-radius: 5px;
+            background: #d3d3d3;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .slider-value {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* Tags Input */
+        .tags-input-container {
+            border: 1px solid var(--border-color);
+            padding: 0.5rem;
+            border-radius: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+            min-height: 42px;
+        }
+
+        .tag {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: var(--primary-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            font-size: 0.75rem;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+        }
+
+        .tags-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            min-width: 120px;
+            font-size: 0.95rem;
+        }
+
+        /* Card Style Settings */
+        .card-style-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .card-style-option {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .card-style-option.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
+        .card-style-preview {
+            height: 100px;
+            background-color: #f0f2f5;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .card-style-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">Summit SEO</div>
+            <nav>
+                <div class="nav-item">Dashboard</div>
+                <div class="nav-item">Site Analysis</div>
+                <div class="nav-item">Technical SEO</div>
+                <div class="nav-item">Content Analysis</div>
+                <div class="nav-item">Security</div>
+                <div class="nav-item">Performance</div>
+                <div class="nav-item">Reports</div>
+                <div class="nav-item active">Settings</div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1>Settings</h1>
+                <div class="user-actions">
+                    <button class="button button-secondary">Cancel</button>
+                    <button class="button button-primary">Save Changes</button>
+                </div>
+            </div>
+
+            <!-- Settings Navigation -->
+            <div class="settings-navigation">
+                <div class="settings-tabs">
+                    <div class="settings-tab active">Project Settings</div>
+                    <div class="settings-tab">Analysis Configuration</div>
+                    <div class="settings-tab">Notifications</div>
+                    <div class="settings-tab">API Access</div>
+                    <div class="settings-tab">User Preferences</div>
+                </div>
+            </div>
+
+            <!-- Project Settings Section -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <div class="settings-section-title">Project Settings</div>
+                    <div class="settings-section-description">Configure basic information about your project</div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="project-name">Project Name</label>
+                        <input type="text" id="project-name" class="form-input" value="Example E-Commerce Store">
+                        <span class="form-hint">Used in reports and the dashboard</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="project-url">Website URL</label>
+                        <input type="url" id="project-url" class="form-input" value="https://example-store.com">
+                        <span class="form-hint">Primary domain for this project</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="project-category">Project Category</label>
+                        <select id="project-category" class="form-select">
+                            <option value="ecommerce" selected>E-Commerce</option>
+                            <option value="blog">Blog</option>
+                            <option value="corporate">Corporate</option>
+                            <option value="news">News/Media</option>
+                            <option value="portfolio">Portfolio</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <span class="form-hint">Affects recommendation priorities</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="project-industry">Industry</label>
+                        <select id="project-industry" class="form-select">
+                            <option value="retail" selected>Retail</option>
+                            <option value="technology">Technology</option>
+                            <option value="finance">Finance</option>
+                            <option value="health">Healthcare</option>
+                            <option value="education">Education</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <span class="form-hint">Helps with industry-specific recommendations</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Additional Domains</label>
+                    <div class="tags-input-container">
+                        <div class="tag">
+                            <span>blog.example-store.com</span>
+                            <span class="tag-remove">×</span>
+                        </div>
+                        <div class="tag">
+                            <span>support.example-store.com</span>
+                            <span class="tag-remove">×</span>
+                        </div>
+                        <input type="text" class="tags-input" placeholder="Add domain and press Enter">
+                    </div>
+                    <span class="form-hint">Additional domains to include in analysis</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Project Visibility</label>
+                    <div style="display: flex; gap: 2rem;">
+                        <div class="form-checkbox-group">
+                            <input type="radio" id="visibility-private" name="visibility" class="form-checkbox" checked>
+                            <label for="visibility-private">Private (Only visible to team members)</label>
+                        </div>
+                        <div class="form-checkbox-group">
+                            <input type="radio" id="visibility-public" name="visibility" class="form-checkbox">
+                            <label for="visibility-public">Public (Reports can be shared via link)</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Configuration Section -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <div class="settings-section-title">Analysis Configuration</div>
+                    <div class="settings-section-description">Configure how Summit SEO analyzes your website</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Analysis Components</label>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                        <div class="form-checkbox-group">
+                            <input type="checkbox" id="component-technical" class="form-checkbox" checked>
+                            <label for="component-technical">Technical SEO</label>
+                        </div>
+                        <div class="form-checkbox-group">
+                            <input type="checkbox" id="component-content" class="form-checkbox" checked>
+                            <label for="component-content">Content Analysis</label>
+                        </div>
+                        <div class="form-checkbox-group">
+                            <input type="checkbox" id="component-performance" class="form-checkbox" checked>
+                            <label for="component-performance">Performance</label>
+                        </div>
+                        <div class="form-checkbox-group">
+                            <input type="checkbox" id="component-security" class="form-checkbox" checked>
+                            <label for="component-security">Security</label>
+                        </div>
+                        <div class="form-checkbox-group">
+                            <input type="checkbox" id="component-accessibility" class="form-checkbox" checked>
+                            <label for="component-accessibility">Accessibility</label>
+                        </div>
+                        <div class="form-checkbox-group">
+                            <input type="checkbox" id="component-mobile" class="form-checkbox" checked>
+                            <label for="component-mobile">Mobile Friendly</label>
+                        </div>
+                        <div class="form-checkbox-group">
+                            <input type="checkbox" id="component-schema" class="form-checkbox" checked>
+                            <label for="component-schema">Schema.org</label>
+                        </div>
+                        <div class="form-checkbox-group">
+                            <input type="checkbox" id="component-social" class="form-checkbox" checked>
+                            <label for="component-social">Social Media</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="crawler-depth">Crawl Depth</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="3" class="slider" id="crawler-depth">
+                            <div class="slider-value">
+                                <span>Shallow (1)</span>
+                                <span>Current: 3</span>
+                                <span>Deep (10)</span>
+                            </div>
+                        </div>
+                        <span class="form-hint">How many links deep to crawl from the homepage</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="crawler-pages">Max Pages to Analyze</label>
+                        <input type="number" id="crawler-pages" class="form-input" value="100">
+                        <span class="form-hint">Maximum number of pages to analyze (0 for unlimited)</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="crawler-delay">Crawl Delay (ms)</label>
+                        <input type="number" id="crawler-delay" class="form-input" value="200">
+                        <span class="form-hint">Delay between requests to avoid overloading the server</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="crawler-threads">Concurrent Requests</label>
+                        <select id="crawler-threads" class="form-select">
+                            <option value="1">1 (Least impact)</option>
+                            <option value="3" selected>3 (Balanced)</option>
+                            <option value="5">5 (Faster)</option>
+                            <option value="10">10 (Fastest)</option>
+                        </select>
+                        <span class="form-hint">Number of concurrent requests (higher = faster but more server load)</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Exclusion Patterns</label>
+                    <div class="tags-input-container">
+                        <div class="tag">
+                            <span>/login/*</span>
+                            <span class="tag-remove">×</span>
+                        </div>
+                        <div class="tag">
+                            <span>/admin/*</span>
+                            <span class="tag-remove">×</span>
+                        </div>
+                        <div class="tag">
+                            <span>/cart/*</span>
+                            <span class="tag-remove">×</span>
+                        </div>
+                        <input type="text" class="tags-input" placeholder="Add URL pattern and press Enter">
+                    </div>
+                    <span class="form-hint">URLs matching these patterns will be excluded from analysis</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Custom User Agent</label>
+                    <input type="text" class="form-input" value="Summit SEO Analyzer/1.0 (+https://www.summit-seo.com/bot)">
+                    <span class="form-hint">User agent to use for requests (leave blank for default)</span>
+                </div>
+            </div>
+
+            <!-- Notification Settings Section -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <div class="settings-section-title">Notification Settings</div>
+                    <div class="settings-section-description">Configure when and how you receive notifications</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Notifications</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Analysis Complete</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Critical Issues Found</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Weekly Summary</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Score Changes</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Product Updates</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Tips & Best Practices</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Notification Recipients</label>
+                    <div class="tags-input-container">
+                        <div class="tag">
+                            <span>admin@example.com</span>
+                            <span class="tag-remove">×</span>
+                        </div>
+                        <div class="tag">
+                            <span>seo@example.com</span>
+                            <span class="tag-remove">×</span>
+                        </div>
+                        <input type="text" class="tags-input" placeholder="Add email and press Enter">
+                    </div>
+                    <span class="form-hint">Email addresses to receive notifications</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Minimum Severity for Alerts</label>
+                    <select class="form-select">
+                        <option value="critical">Critical Issues Only</option>
+                        <option value="warning" selected>Warnings & Critical Issues</option>
+                        <option value="notice">All Issues (Including Notices)</option>
+                    </select>
+                    <span class="form-hint">Minimum severity level that triggers notifications</span>
+                </div>
+            </div>
+
+            <!-- Settings Footer -->
+            <div class="settings-footer">
+                <button class="button button-danger">Reset to Defaults</button>
+                <button class="button button-secondary">Cancel</button>
+                <button class="button button-primary">Save Changes</button>
+            </div>
+        </main>
+    </div>
+</body>
+</html> 

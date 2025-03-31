@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summit SEO - Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-color: #333;
+            --background-color: #f5f7fa;
+            --card-background: #fff;
+            --border-color: #e1e4e8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1.5rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item {
+            padding: 0.75rem 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-item.active {
+            color: var(--secondary-color);
+        }
+
+        .nav-item:hover {
+            color: var(--primary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .button {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .button-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .button-secondary {
+            background-color: white;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Overview */
+        .overview {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+        }
+
+        .metric-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-title {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-change {
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .positive {
+            color: var(--secondary-color);
+        }
+
+        .negative {
+            color: var(--danger-color);
+        }
+
+        /* Analysis Categories */
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .category-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .category-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .category-score {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .excellent {
+            background-color: var(--secondary-color);
+            width: 90%;
+        }
+
+        .good {
+            background-color: #3498db;
+            width: 75%;
+        }
+
+        .fair {
+            background-color: var(--warning-color);
+            width: 60%;
+        }
+
+        .poor {
+            background-color: var(--danger-color);
+            width: 40%;
+        }
+
+        .findings-list {
+            list-style: none;
+        }
+
+        .finding-item {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .finding-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        .critical {
+            background-color: var(--danger-color);
+        }
+
+        .warning {
+            background-color: var(--warning-color);
+        }
+
+        .info {
+            background-color: var(--primary-color);
+        }
+
+        /* Quick Wins */
+        .quick-wins {
+            margin-bottom: 2rem;
+        }
+
+        .quick-wins-title {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .recommendations-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .recommendation-card {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .recommendation-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .recommendation-category {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background-color: rgba(52, 152, 219, 0.1);
+            color: var(--primary-color);
+        }
+
+        .recommendation-title {
+            font-weight: 600;
+        }
+
+        .recommendation-description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .recommendation-impact {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .impact-indicator {
+            display: flex;
+        }
+
+        .impact-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            margin-right: 2px;
+        }
+
+        .impact-dot.empty {
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">Summit SEO</div>
+            <nav>
+                <div class="nav-item active">Dashboard</div>
+                <div class="nav-item">Site Analysis</div>
+                <div class="nav-item">Technical SEO</div>
+                <div class="nav-item">Content Analysis</div>
+                <div class="nav-item">Security</div>
+                <div class="nav-item">Performance</div>
+                <div class="nav-item">Reports</div>
+                <div class="nav-item">Settings</div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1>Dashboard</h1>
+                <div class="user-actions">
+                    <button class="button button-secondary">Previous Reports</button>
+                    <button class="button button-primary">New Analysis</button>
+                </div>
+            </div>
+
+            <!-- Overview Cards -->
+            <div class="overview">
+                <div class="card metric-card">
+                    <div class="metric-title">Overall SEO Score</div>
+                    <div class="metric-value">78</div>
+                    <div class="metric-change positive">+5 since last scan</div>
+                </div>
+                <div class="card metric-card">
+                    <div class="metric-title">Critical Issues</div>
+                    <div class="metric-value">3</div>
+                    <div class="metric-change negative">+1 since last scan</div>
+                </div>
+                <div class="card metric-card">
+                    <div class="metric-title">Warnings</div>
+                    <div class="metric-value">12</div>
+                    <div class="metric-change positive">-4 since last scan</div>
+                </div>
+                <div class="card metric-card">
+                    <div class="metric-title">Opportunities</div>
+                    <div class="metric-value">24</div>
+                    <div class="metric-change">No change</div>
+                </div>
+            </div>
+
+            <!-- Analysis Categories -->
+            <div class="categories">
+                <div class="card category-card">
+                    <div class="category-header">
+                        <div class="category-title">Security</div>
+                        <div class="category-score">90/100</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress excellent"></div>
+                    </div>
+                    <ul class="findings-list">
+                        <li class="finding-item">
+                            <div class="finding-icon warning"></div>
+                            <span>Mixed content on checkout page</span>
+                        </li>
+                        <li class="finding-item">
+                            <div class="finding-icon info"></div>
+                            <span>HTTP security headers can be improved</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card category-card">
+                    <div class="category-header">
+                        <div class="category-title">Performance</div>
+                        <div class="category-score">75/100</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress good"></div>
+                    </div>
+                    <ul class="findings-list">
+                        <li class="finding-item">
+                            <div class="finding-icon critical"></div>
+                            <span>Render-blocking resources found</span>
+                        </li>
+                        <li class="finding-item">
+                            <div class="finding-icon warning"></div>
+                            <span>Image optimization recommended</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card category-card">
+                    <div class="category-header">
+                        <div class="category-title">Content</div>
+                        <div class="category-score">60/100</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress fair"></div>
+                    </div>
+                    <ul class="findings-list">
+                        <li class="finding-item">
+                            <div class="finding-icon critical"></div>
+                            <span>Duplicate content on 3 pages</span>
+                        </li>
+                        <li class="finding-item">
+                            <div class="finding-icon warning"></div>
+                            <span>Missing meta descriptions on 7 pages</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card category-card">
+                    <div class="category-header">
+                        <div class="category-title">Accessibility</div>
+                        <div class="category-score">40/100</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress poor"></div>
+                    </div>
+                    <ul class="findings-list">
+                        <li class="finding-item">
+                            <div class="finding-icon critical"></div>
+                            <span>Low contrast text on homepage</span>
+                        </li>
+                        <li class="finding-item">
+                            <div class="finding-icon critical"></div>
+                            <span>Missing alt text on 12 images</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Quick Wins -->
+            <div class="quick-wins">
+                <div class="quick-wins-title">Recommended Quick Wins</div>
+                <div class="recommendations-list">
+                    <div class="card recommendation-card">
+                        <div class="recommendation-header">
+                            <div class="recommendation-category">Security</div>
+                        </div>
+                        <div class="recommendation-title">Enable HTTPS on all pages</div>
+                        <div class="recommendation-description">
+                            Some pages are still using HTTP. Migrating all pages to HTTPS will improve security and SEO ranking.
+                        </div>
+                        <div class="recommendation-impact">
+                            <div>Impact:</div>
+                            <div class="impact-indicator">
+                                <div class="impact-dot"></div>
+                                <div class="impact-dot"></div>
+                                <div class="impact-dot"></div>
+                                <div class="impact-dot empty"></div>
+                                <div class="impact-dot empty"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card recommendation-card">
+                        <div class="recommendation-header">
+                            <div class="recommendation-category">Performance</div>
+                        </div>
+                        <div class="recommendation-title">Optimize images on product pages</div>
+                        <div class="recommendation-description">
+                            Product images are unnecessarily large. Compression can reduce load time by up to 40%.
+                        </div>
+                        <div class="recommendation-impact">
+                            <div>Impact:</div>
+                            <div class="impact-indicator">
+                                <div class="impact-dot"></div>
+                                <div class="impact-dot"></div>
+                                <div class="impact-dot"></div>
+                                <div class="impact-dot"></div>
+                                <div class="impact-dot empty"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card recommendation-card">
+                        <div class="recommendation-header">
+                            <div class="recommendation-category">Content</div>
+                        </div>
+                        <div class="recommendation-title">Add missing meta descriptions</div>
+                        <div class="recommendation-description">
+                            7 pages are missing meta descriptions. Adding them will improve click-through rates from search results.
+                        </div>
+                        <div class="recommendation-impact">
+                            <div>Impact:</div>
+                            <div class="impact-indicator">
+                                <div class="impact-dot"></div>
+                                <div class="impact-dot"></div>
+                                <div class="impact-dot empty"></div>
+                                <div class="impact-dot empty"></div>
+                                <div class="impact-dot empty"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html> 

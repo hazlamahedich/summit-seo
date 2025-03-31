@@ -1593,3 +1593,253 @@ Test data is managed through:
 - Mock objects for external dependencies
 - Parameterized tests for comprehensive coverage
 - Snapshot testing for report output validation
+
+## Database Architecture
+
+### Core Models
+1. Base Models:
+   - `BaseModel`: Abstract base class with common fields
+     - UUID primary key
+     - Creation and update timestamps
+     - Soft delete support
+   - `TenantModel`: Multi-tenant base class
+     - Tenant identifier field
+     - Tenant-specific relationships
+
+2. User Management:
+   - `User`: Core user entity
+     - Authentication fields
+     - Profile information
+     - Role relationships
+   - `Role`: Authorization roles
+     - Role name and description
+     - User relationships
+   - `TenantUser`: Tenant-specific user settings
+     - Tenant-specific permissions
+     - Role in tenant context
+
+3. Project Management:
+   - `Project`: Website analysis project
+     - Basic project information
+     - Configuration settings
+     - Analysis relationships
+   - `Analysis`: SEO analysis results
+     - Analysis status tracking
+     - Results storage
+     - Finding relationships
+   - `Finding`: Individual analysis findings
+     - Severity levels
+     - Location tracking
+     - Recommendation relationships
+   - `Recommendation`: Improvement suggestions
+     - Priority levels
+     - Implementation details
+     - Resource references
+
+### Database Design Patterns
+1. Multi-tenancy:
+   - Tenant isolation through tenant_id field
+   - Tenant-specific relationships
+   - Tenant user management
+   - Tenant-specific settings
+
+2. Soft Delete:
+   - is_deleted flag on all models
+   - Filtering of deleted records
+   - Recovery capability
+
+3. Audit Trail:
+   - created_at timestamp
+   - updated_at timestamp
+   - Version tracking capability
+
+4. Relationships:
+   - One-to-many relationships
+   - Many-to-many relationships
+   - Cascade delete rules
+   - Back references
+
+### Migration Strategy
+1. Version Control:
+   - Alembic for migration management
+   - Versioned schema changes
+   - Upgrade and downgrade paths
+
+2. Data Seeding:
+   - Initial role creation
+   - Admin user setup
+   - Default configurations
+
+3. Environment Support:
+   - Development (SQLite)
+   - Production (PostgreSQL)
+   - Environment-specific settings
+
+### Security Patterns
+1. Authentication:
+   - Password hashing with bcrypt
+   - JWT token-based authentication
+   - Role-based access control
+
+2. Authorization:
+   - Role-based permissions
+   - Tenant-specific permissions
+   - Resource-level access control
+
+3. Data Isolation:
+   - Tenant data separation
+   - User data protection
+   - Secure credential storage
+
+### Performance Patterns
+1. Indexing Strategy:
+   - Primary key indexes
+   - Foreign key indexes
+   - Tenant-specific indexes
+   - Search optimization indexes
+
+2. Query Optimization:
+   - Eager loading relationships
+   - Lazy loading where appropriate
+   - Query caching support
+
+3. Connection Management:
+   - Connection pooling
+   - Session management
+   - Transaction handling
+
+## API Architecture
+
+### RESTful Design
+1. Resource Naming:
+   - Plural nouns for collections
+   - Singular nouns for individual resources
+   - Nested resources for relationships
+
+2. HTTP Methods:
+   - GET for retrieval
+   - POST for creation
+   - PUT/PATCH for updates
+   - DELETE for removal
+
+3. Status Codes:
+   - 200 for success
+   - 201 for creation
+   - 400 for bad requests
+   - 401 for unauthorized
+   - 403 for forbidden
+   - 404 for not found
+   - 500 for server errors
+
+### Authentication
+1. JWT Implementation:
+   - Token-based authentication
+   - Refresh token support
+   - Token expiration handling
+
+2. Authorization:
+   - Role-based access control
+   - Permission checking
+   - Resource ownership validation
+
+### Rate Limiting
+1. Implementation:
+   - Request counting
+   - Time window tracking
+   - Rate limit headers
+
+2. Configuration:
+   - Per-endpoint limits
+   - Per-user limits
+   - Per-tenant limits
+
+### Error Handling
+1. Standard Format:
+   - Error code
+   - Error message
+   - Error details
+   - Stack trace (development only)
+
+2. Validation:
+   - Input validation
+   - Business rule validation
+   - Constraint checking
+
+## Frontend Architecture
+
+### Component Structure
+1. Layout Components:
+   - Header
+   - Navigation
+   - Footer
+   - Sidebar
+
+2. Feature Components:
+   - Dashboard
+   - Analysis views
+   - Project management
+   - User management
+
+3. Common Components:
+   - Forms
+   - Tables
+   - Charts
+   - Modals
+
+### State Management
+1. Global State:
+   - User information
+   - Tenant context
+   - Application settings
+
+2. Local State:
+   - Form data
+   - UI state
+   - Component data
+
+### Routing
+1. Route Structure:
+   - Nested routes
+   - Protected routes
+   - Dynamic routes
+
+2. Navigation:
+   - Breadcrumb navigation
+   - Menu structure
+   - Route guards
+
+## Testing Strategy
+
+### Unit Testing
+1. Model Tests:
+   - CRUD operations
+   - Relationship handling
+   - Validation rules
+
+2. Service Tests:
+   - Business logic
+   - Data processing
+   - Error handling
+
+### Integration Testing
+1. API Tests:
+   - Endpoint functionality
+   - Authentication
+   - Authorization
+   - Error handling
+
+2. Database Tests:
+   - Migration testing
+   - Data integrity
+   - Transaction handling
+
+### Performance Testing
+1. Load Testing:
+   - Concurrent users
+   - Request throughput
+   - Response times
+
+2. Stress Testing:
+   - System limits
+   - Error conditions
+   - Recovery testing
