@@ -1,0 +1,151 @@
+/* Tour Pointer Styles */
+.tour-pointer {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: var(--primary);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  box-shadow: 0 0 0 5px rgba(var(--primary-rgb), 0.3);
+  animation: pulse 2s infinite;
+}
+
+.tour-pointer::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Tour Highlight Styles */
+.tour-highlight {
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 0 0 4px var(--primary), 0 0 0 8px rgba(var(--primary-rgb), 0.3);
+  border-radius: 4px;
+  transition: box-shadow 0.3s ease;
+}
+
+/* Tour Modal Styles */
+.tour-modal {
+  position: fixed;
+  background-color: var(--card);
+  color: var(--card-foreground);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  z-index: 9999;
+}
+
+.tour-modal-title {
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.tour-modal-content {
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.tour-modal-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tour-steps-indicator {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.tour-step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--muted);
+  margin: 0 4px;
+}
+
+.tour-step-dot.active {
+  background-color: var(--primary);
+}
+
+/* Animations */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--primary-rgb), 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(var(--primary-rgb), 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--primary-rgb), 0);
+  }
+}
+
+/* Tour Overlay */
+.tour-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9;
+}
+
+/* Tooltip variants for tour */
+.tour-tooltip {
+  --arrow-size: 10px;
+  position: relative;
+}
+
+.tour-tooltip::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.tour-tooltip.top::before {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 var(--arrow-size) var(--arrow-size) var(--arrow-size);
+  border-color: transparent transparent var(--card) transparent;
+}
+
+.tour-tooltip.bottom::before {
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: var(--arrow-size) var(--arrow-size) 0 var(--arrow-size);
+  border-color: var(--card) transparent transparent transparent;
+}
+
+.tour-tooltip.left::before {
+  top: 50%;
+  right: 100%;
+  transform: translateY(-50%);
+  border-width: var(--arrow-size) var(--arrow-size) var(--arrow-size) 0;
+  border-color: transparent var(--card) transparent transparent;
+}
+
+.tour-tooltip.right::before {
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  border-width: var(--arrow-size) 0 var(--arrow-size) var(--arrow-size);
+  border-color: transparent transparent transparent var(--card);
+}
+
+/* Additional tour styles can be added here */ 

@@ -1843,3 +1843,289 @@ Test data is managed through:
    - System limits
    - Error conditions
    - Recovery testing
+
+## Testing Patterns
+
+### Test Structure
+- Each analyzer has a dedicated test file in tests/analyzer/
+- Tests use pytest fixtures for setup and teardown
+- Mock HTML content is used for testing parsing logic
+- Expected results are explicitly defined for validation
+- Edge cases are tested separately from normal cases
+- Integration with factory is tested in factory tests
+
+### Security Testing
+- Each security check has dedicated test cases
+- Tests validate both positive (secure) and negative (insecure) scenarios
+- Mock HTTP responses are used to simulate headers
+- Severity levels are validated in tests
+- Remediation recommendations are verified
+
+### Service Testing
+- Services with external dependencies use comprehensive mocking
+- Supabase client operations are mocked using AsyncMock for async operations
+- Database queries use fixture data with standardized patterns
+- Complete test isolation eliminates reliance on external systems
+- CRUD operations are tested with various scenarios (found/not found, create/update)
+- Test coverage is maintained at 95%+ for service layer code
+- All tests are async-compatible with proper pytest-asyncio markers
+- Mock data patterns follow the same structure as real data
+
+### AsyncMock Implementation Pattern
+- AsyncMock is used for all async methods that will be awaited
+- Complete isolation from external dependencies
+- Each mock is configured to return appropriate data for the test scenario
+- Chainable methods (like `from_`, `select`, `eq`, `order`) return self or new mocks
+- Terminal methods like `execute()` return AsyncMock objects with predefined results
+- Different test scenarios use different return values to test all code paths
+- Tests validate that mocks are called with expected parameters
+
+### Database Service Testing
+- Mock Supabase client provides consistent responses
+- Test fixtures define standard database responses
+- Service logic is tested independently of database implementation
+- Row Level Security testing uses mock permission checks 
+- Transaction handling is verified with mock commits/rollbacks
+- Error cases test proper exception handling
+- Edge cases like empty results, duplicates, and invalid IDs are covered
+
+# System Patterns
+
+## API Architecture
+- FastAPI for high-performance async API
+- Error response standardization
+- Middleware architecture for cross-cutting concerns
+- Service layer pattern for business logic
+- Repository pattern for data access
+
+## Error Handling
+- Standardized error response format
+- Error code enumeration
+- Centralized exception handlers
+- Middleware-based error processing
+- Actionable suggestions for resolution
+- Detailed logging with client information
+
+## Testing Patterns
+- Primary testing with pytest
+- Standalone unittest-based testing for components with settings dependencies
+- AsyncTestCase for properly testing async functions
+- Mock objects for external dependencies
+- Consolidated test runners for manual test execution
+- Isolation from application configuration
+
+## Authentication
+- JWT token-based authentication
+- User role-based permissions
+- Token refresh mechanism
+- Secure password hashing
+
+## Data Access
+- SQLAlchemy ORM for database operations
+- Repository pattern for data access abstraction
+- Unit of Work pattern for transaction management
+- Data Transfer Objects (DTOs) for external interfaces
+- Mapper functions for entity transformations
+
+## SEO Analysis
+- Analyzer factory pattern
+- Base analyzer with specialized implementations
+- Analysis result standardization
+- Scoring algorithm with weighted components
+- Remediation suggestions framework
+
+## Frontend Patterns
+
+### Component Architecture
+- All UI components follow shadcn/ui patterns with consistent styling
+- Modular component approach with clear separation of concerns
+- Custom theming with Tailwind CSS using CSS variables
+- Responsive design patterns using custom breakpoint utilities
+- Dark/light theme support with OS preference detection
+- Reusable layout components:
+  - Container: For consistent content width and padding
+  - Section: For semantic grouping of content with proper spacing
+  - Grid: Flexible grid system with responsive column support
+  - Flex: Layout utility for flexbox-based designs
+- Specialized layout components:
+  - PageLayout: Page-level structure with header, content, footer
+  - SidebarLayout: Two-column layout with responsive sidebar
+  - DashboardLayout: Comprehensive layout for dashboard pages
+
+### Admin Dashboard Architecture
+- Role-based layout with admin permission check
+- Restricted access using ProtectedRoute component and useAuth context
+- Tabbed interface for organizing different admin functions:
+  - System monitoring with real-time metrics
+  - User management with CRUD operations
+  - System configuration with categorized settings
+  - Analytics for system performance (placeholder)
+- Consistent data fetching pattern using:
+  - Custom API client for admin operations
+  - Loading states with skeleton loaders
+  - Error handling with toast notifications
+  - Refresh capability for all data sections
+- Data display patterns:
+  - Card-based grouping of related information
+  - Table layout for data with consistent styling
+  - Form components for data editing with validation
+  - Modal dialogs for confirmation and complex editing
+- Shared components across tabs:
+  - Alert component for error states
+  - Loading indicators for asynchronous operations
+  - Action buttons with consistent positioning
+  - Responsive layout adapting to different screen sizes
+
+### State Management
+- React Context for global state
+- React Query for server state
+- Local state with useState where appropriate
+- localStorage for persistent user preferences
+
+### UI/UX Patterns
+- Consistent card-based layouts
+- Responsive grid and flex layouts
+- Dark/light theme support
+- Loading states and skeletons
+- Error boundaries and fallbacks
+- Animation and transition system
+- Toast notifications for feedback
+
+### Keyboard Shortcuts System
+- Custom `useKeyboardShortcuts` hook for managing shortcuts
+- Context provider for global shortcuts access
+- Keyboard shortcuts dialog accessible via Shift+?
+- Keymap button in navigation for discoverability
+- Support for different shortcut categories
+- Format utility for displaying key combinations
+- Shortcut conflict prevention
+- Focus-aware shortcuts (respects input fields)
+
+### Sound Effects System
+- Web Audio API for cross-browser compatibility
+- Context provider for global sound access
+- Multiple sound types for different interactions
+- Volume control and mute functionality
+- User preference persistence in localStorage
+- Subtle audio feedback on key interactions
+- Integration with keyboard shortcuts and UI elements
+
+### Product Tour / Onboarding
+- Step-by-step guided tour system
+- Element targeting and highlighting
+- Tooltip positioning with responsive adjustments
+- Tour persistence and progress tracking
+- Notification prompt for new users
+- Manual trigger via tour button
+- Animation effects for engagement
+- Sound feedback integration
+
+## Data Patterns
+
+### Form Management
+- Form validation with shadcn-ui and form libraries
+- Consistent error handling and feedback
+
+### API Integration
+- Services layer for API calls
+- React Query for data fetching and caching
+- Optimistic updates for improved UX
+- Error handling with retry logic
+
+## Animation Patterns
+
+### Transition Animations
+- Page transitions with Framer Motion
+- Content reveal animations
+- List item animations
+- Modal and dialog transitions
+
+### Interaction Feedback
+- Button and control state animations
+- Hover and focus effects
+- Loading and progress animations
+- Success/error state animations
+
+### Motion Design System
+- Consistent animation timing
+- Shared animation variants
+- Performance-optimized animations
+- Respect for reduced motion preferences
+
+## Mobile Patterns
+
+### Responsive Design
+- Mobile-first approach
+- Breakpoint system for different devices
+- Conditional rendering for mobile/desktop
+- Touch-optimized interactions
+
+### Mobile Navigation
+- Bottom navigation for mobile
+- Collapsible sidebar for tablet/desktop
+- Hamburger menu with slide-in navigation
+
+## Architectural Integrations
+
+### Supabase Integration
+- Authentication flow with Supabase Auth
+- Real-time subscriptions for live updates
+- Row Level Security for data access control
+- Storage integration for file uploads
+
+### LLM Integration
+- LiteLLM service abstraction
+- Model routing for different providers
+- Cost optimization strategies
+- Fallback mechanisms for reliability
+
+## Frontend Architecture Patterns
+
+### A/B Testing System
+
+The A/B testing system enables data-driven UI/UX decisions through controlled experiments. The architecture follows these key patterns:
+
+1. **Context Provider Pattern**
+   - `ABTestingProvider`: Central context provider for experiment state
+   - Manages experiment data, user assignments, and tracking
+   - Provides hooks and utilities for components to access experiment state
+
+2. **Database Schema**
+   - `ab_experiments`: Stores experiment definitions with metadata
+   - `ab_variants`: Stores variant configurations for each experiment
+   - `ab_user_experiments`: Tracks user assignments and conversions
+
+3. **Component Patterns**
+   - **Variant Selection**: Conditionally renders components based on assigned variant
+   - **Interaction Tracking**: Monitors user interactions with variants
+   - **Conversion Tracking**: Records conversion events for analysis
+
+4. **Admin Interface**
+   - Experiment management dashboard for creating and monitoring tests
+   - Statistical analysis of variant performance
+   - Conversion tracking and visualization
+
+5. **Implementation Example**
+   ```tsx
+   // Using an A/B test component
+   <ABTest experimentId="dashboard-layout">
+     <ABVariant id="control">Original Design</ABVariant>
+     <ABVariant id="variant-a">New Design A</ABVariant>
+     <ABVariant id="variant-b">New Design B</ABVariant>
+   </ABTest>
+   ```
+
+6. **Hook-Based API**
+   - `useABTestVariant`: Hook for accessing variant assignment and tracking
+   - Provides utilities for interaction and conversion tracking
+   - Supports automatic view tracking
+
+7. **Statistical Analysis**
+   - Calculates conversion rates and confidence intervals
+   - Supports multi-variant testing with weighted distribution
+   - Provides actionable insights for UX improvements
+
+8. **Implementation Components**
+   - Dashboard Widget A/B Test: Tests different data visualization layouts
+   - CTA Button A/B Test: Tests button designs for conversion optimization
+   - Admin Dashboard: Manages and monitors experiments

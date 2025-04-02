@@ -1,0 +1,87 @@
+{
+    "summit-base": {
+        "litellm_params": {
+            "model": "gpt-3.5-turbo",
+            "api_key": "${OPENAI_API_KEY}"
+        },
+        "description": "Default model for general SEO analysis"
+    },
+    "summit-advanced": {
+        "litellm_params": {
+            "model": "gpt-4",
+            "api_key": "${OPENAI_API_KEY}"
+        },
+        "description": "Advanced model for complex SEO analysis and recommendations"
+    },
+    "summit-content": {
+        "litellm_params": {
+            "model": "claude-3-haiku-20240307",
+            "api_key": "${ANTHROPIC_API_KEY}"
+        },
+        "description": "Specialized model for content analysis and optimization"
+    },
+    "summit-azure": {
+        "litellm_params": {
+            "model": "azure/gpt-35-turbo",
+            "api_base": "https://your-azure-endpoint.openai.azure.com/",
+            "api_key": "${AZURE_API_KEY}",
+            "api_version": "2023-05-15"
+        },
+        "description": "Azure OpenAI model for enterprise deployments"
+    },
+    "summit-embedding": {
+        "litellm_params": {
+            "model": "text-embedding-ada-002",
+            "api_key": "${OPENAI_API_KEY}"
+        },
+        "description": "Default embedding model for semantic search and similarity analysis"
+    },
+    "summit-ollama-llama2": {
+        "litellm_params": {
+            "model": "ollama/llama2",
+            "api_base": "${OLLAMA_BASE_URL}"
+        },
+        "description": "Local Llama 2 model via Ollama for privacy-focused analysis"
+    },
+    "summit-ollama-mistral": {
+        "litellm_params": {
+            "model": "ollama/mistral",
+            "api_base": "${OLLAMA_BASE_URL}"
+        },
+        "description": "Local Mistral model via Ollama for efficient analysis"
+    },
+    "summit-ollama-codellama": {
+        "litellm_params": {
+            "model": "ollama/codellama",
+            "api_base": "${OLLAMA_BASE_URL}"
+        },
+        "description": "Local CodeLlama model via Ollama for code and script analysis"
+    },
+    "summit-openrouter-gpt4": {
+        "litellm_params": {
+            "model": "openrouter/openai/gpt-4-turbo",
+            "api_base": "${OPENROUTER_BASE_URL}",
+            "api_key": "${OPENROUTER_API_KEY}",
+            "timeout": "${OPENROUTER_TIMEOUT}"
+        },
+        "description": "GPT-4 Turbo via OpenRouter for production use"
+    },
+    "summit-openrouter-claude": {
+        "litellm_params": {
+            "model": "openrouter/anthropic/claude-3-opus-20240229",
+            "api_base": "${OPENROUTER_BASE_URL}",
+            "api_key": "${OPENROUTER_API_KEY}",
+            "timeout": "${OPENROUTER_TIMEOUT}"
+        },
+        "description": "Claude 3 Opus via OpenRouter for advanced content analysis"
+    },
+    "summit-openrouter-gemini": {
+        "litellm_params": {
+            "model": "openrouter/google/gemini-pro",
+            "api_base": "${OPENROUTER_BASE_URL}",
+            "api_key": "${OPENROUTER_API_KEY}",
+            "timeout": "${OPENROUTER_TIMEOUT}"
+        },
+        "description": "Gemini Pro via OpenRouter for general-purpose analysis"
+    }
+} 

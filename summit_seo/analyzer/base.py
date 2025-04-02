@@ -377,3 +377,67 @@ class BaseAnalyzer(ABC, Generic[InputType, OutputType]):
             return 'long'
         
         return None 
+
+    async def enhance_recommendations(self, result: AnalysisResult[OutputType]) -> AnalysisResult[OutputType]:
+        """Enhance recommendations using LLM capabilities.
+        
+        This method integrates with the LLM recommendation enhancer service to improve
+        the quality of recommendations with detailed explanations, implementation steps,
+        and impact assessments.
+        
+        Args:
+            result: Analysis result with basic recommendations
+            
+        Returns:
+            Analysis result with enhanced recommendations
+        """
+        try:
+            # Import LLM recommendation enhancer service
+            try:
+                from ..web.api.services.recommendation_enhancer import get_recommendation_enhancer
+                enhancer = get_recommendation_enhancer()
+            except ImportError:
+                import logging
+                logging.warning("LLM recommendation enhancer not available, skipping enhancement")
+                return result
+            
+            # Check if there are recommendations to enhance
+            if not result.enhanced_recommendations:
+                # Nothing to enhance
+                return result
+                
+            # Enhance the recommendations
+            result.enhanced_recommendations = await enhancer.enhance_recommendations(
+                result.enhanced_recommendations
+            )
+            
+            return result
+            
+        except Exception as e:
+            import logging
+            logging.error(f"Error enhancing recommendations: {str(e)}")
+            return result
+
+    async def analyze_with_enhancements(self, data: InputType) -> AnalysisResult[OutputType]:
+        """Analyze the input data with LLM enhancements.
+        
+        This method extends the standard analyze method by adding LLM-powered
+        enhancements to the recommendations.
+        
+        Args:
+            data: Input data to analyze
+            
+        Returns:
+            AnalysisResult containing the analysis output with enhanced recommendations
+            
+        Raises:
+            AnalyzerError: If analysis fails
+        """
+        # First perform the standard analysis
+        result = await self.analyze(data)
+        
+        # Then enhance the recommendations if enabled in config
+        if self.config.get('enhance_recommendations', True):
+            result = await self.enhance_recommendations(result)
+        
+        return result 

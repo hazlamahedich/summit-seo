@@ -1,6 +1,6 @@
 import pytest
 from fastapi.testclient import TestClient
-from ..main import app
+from summit_seo.web.api.main import app
 
 client = TestClient(app)
 

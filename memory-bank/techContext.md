@@ -864,4 +864,7360 @@ A streamlined mode for unattended execution and script integration, designed for
    - Global state
    - Local state
    - Cache invalidation
-   - Data persistence 
+   - Data persistence
+
+# Technical Context
+
+## Core Technologies
+- Python 3.11+
+- FastAPI: Web API framework
+- Pydantic: Data validation and settings management
+- SQLAlchemy: Database ORM
+- PostgreSQL: Database
+- OpenAI: LLM integration
+- Next.js: Frontend
+- Tailwind CSS: UI styling
+- Pytest: Testing framework (with custom unittest implementation for some components)
+
+## API Framework
+- FastAPI for high-performance async API
+- Pydantic for data validation and settings
+- Middleware for request handling, error processing, and authentication
+- Dependency injection for services
+- Error handling middleware for standardized error responses 
+
+## Testing Approach
+- Primary testing with pytest for most components
+- Custom unittest implementation for error handling components to avoid settings dependencies
+- AsyncTestCase for testing async functions
+- Mock objects for isolating tests from external dependencies
+- Standalone test utilities that don't rely on application configuration
+- Manual test runner for components that can't use pytest
+
+## Database
+- PostgreSQL for primary data storage
+- SQLAlchemy for ORM
+- Alembic for migrations
+- Custom SQL functions where needed
+- Row-level security for multi-tenant data isolation
+
+## Security
+- JWT authentication
+- Password hashing with bcrypt
+- CORS middleware
+- Rate limiting
+- HTTPS enforcement
+- Comprehensive error handling with safe error messages
+
+## Frontend
+- Next.js for frontend
+- Tailwind CSS for styling
+- React Query for data fetching
+- Redux for state management
+- TypeScript for type safety
+
+## Infrastructure
+- Docker for containerization
+- Kubernetes for orchestration
+- CI/CD with GitHub Actions
+- AWS for cloud hosting
+
+## Project Structure
+
+- **summit_seo/**
+  - **analyzer/**: Core analysis modules
+  - **web/**: Web interface and API
+    - **api/**: FastAPI application
+      - **core/**: Core modules and utilities
+        - **supabase.py**: Supabase client configuration
+        - **middleware.py**: Authentication middleware
+        - **deps.py**: Dependency injection functions
+      - **routers/**: API endpoints
+        - **auth.py**: Authentication routes
+        - **projects.py**: Project management
+        - **analyses.py**: Analysis execution and results
+      - **schemas/**: Pydantic models
+      - **models/**: Database models
+  - **collector/**: Data collection modules
+  - **reporter/**: Reporting and visualization
+  - **cache/**: Caching mechanisms
+  - **parallel/**: Parallel processing utilities
+  - **error_handling/**: Error management
+  - **memory/**: Data persistence utilities
+
+## Technical Decisions
+
+1. **Supabase Integration**: We chose Supabase for:
+   - Managed PostgreSQL database with built-in Row Level Security
+   - Ready-to-use authentication system with JWT
+   - Storage capabilities
+   - Real-time capabilities (when needed)
+   - Simplifying security implementation
+
+2. **FastAPI Framework**: Selected for:
+   - High performance
+   - Automatic OpenAPI documentation
+   - Type safety with Pydantic
+   - Easy async support
+   - Middleware and dependency injection
+
+3. **Authentication Strategy**:
+   - JWT-based authentication via Supabase Auth
+   - Token verification using Supabase client
+   - Request-based middleware for token validation
+   - Role-based access control
+
+4. **Database Access Pattern**:
+   - Service layer abstraction over Supabase client
+   - Separation of data access from API routes
+
+5. **LiteLLM Integration** (Planned):
+   - Unified interface to multiple LLM providers
+   - Abstraction layer for LLM operations
+   - Configurable model routing
+   - Fallbacks for reliability
+
+## Technical Constraints
+
+1. **Rate Limiting**:
+   - Supabase has service limits on operations
+   - LLM APIs will have rate and token limitations
+   - Must implement client-side rate limiting
+
+2. **Performance**:
+   - Web analysis can be resource-intensive
+   - Need efficient HTTP request caching
+   - Parallel processing for larger sites
+
+3. **Security**:
+   - Multi-tenant data isolation via Row Level Security
+   - Proper authentication and authorization
+   - Input validation for all API endpoints
+   - Protection against common API vulnerabilities
+
+4. **Compatibility**:
+   - Support for modern browsers and REST clients
+   - API versioning for future compatibility 
+
+# Technical Context and Setup
+
+## Technology Stack
+
+### Backend
+- Python 3.10+
+- FastAPI for API framework
+- Supabase for PostgreSQL database and authentication
+- LiteLLM for LLM provider integration
+- BeautifulSoup for HTML parsing
+- Pydantic for data validation
+- Pytest for testing
+
+### Frontend
+- Next.js 14 with App Router
+- TypeScript for type safety
+- Tailwind CSS for styling
+- Shadcn/ui for component library
+- React Hook Form for form handling
+- Zod for schema validation
+- Framer Motion for animations
+- React Query for data fetching
+- Sonner for toast notifications
+- Lucide React for icons
+- Radix UI for primitive UI components
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications
+- JWT with appropriate expiration
+- Row Level Security for database
+- Input validation on both client and server
+
+### Accessibility
+- Semantic HTML structure
+- ARIA attributes for complex components
+- Keyboard navigation support
+- Screen reader compatibility
+- Reduced motion options
+
+## Technical Debt
+
+1. TypeScript type issues in notification preferences component
+2. Missing unit tests for frontend components
+3. Optimization needed for mobile performance
+4. API error handling improvements needed
+5. Form validation can be more consistent across forms
+
+## External Dependencies
+
+### Backend
+- Supabase for database and authentication
+- OpenAI, Anthropic, Ollama for LLM services
+- Various Python packages listed in requirements.txt
+
+### Frontend
+- Shadcn/ui for UI components
+- Radix UI for primitive components
+- Framer Motion for animations
+- React Hook Form for forms
+- Zod for validation
+- Sonner for toast notifications
+
+## Frontend Technologies
+
+### Core Framework
+- **Next.js**: Server-side rendering React framework
+- **TypeScript**: Type-safe JavaScript
+- **React**: UI component library
+- **Tailwind CSS**: Utility-first CSS framework
+
+### UI Components
+- **shadcn/ui**: Component library based on Radix UI
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon library
+
+### State Management
+- **React Context API**: Global state management
+- **React Query**: Data fetching and caching
+- **localStorage**: Persistent client-side storage
+
+### Admin Dashboard Components
+- **Role-based protection**: Using ProtectedRoute and useAuth context
+- **System monitoring**: Real-time metrics display with refresh capability
+- **User management**: Interactive user listing and management interface
+- **System configuration**: Category-based settings management with type-aware editing
+- **API integration**: Custom API client for secure admin operations
+- **Dashboard layouts**: Specialized layout components for admin interfaces
+- **Data visualization**: Metric displays for system resources and performance
+
+## Development Setup
+
+### Environment Requirements
+- Node.js 18+ for frontend development
+- Python 3.10+ for backend development
+- PostgreSQL 14+ (via Supabase)
+- Package managers: npm and pip
+
+### Environment Variables
+- `SUPABASE_URL`: URL for Supabase project
+- `SUPABASE_KEY`: API key for Supabase
+- `SUPABASE_SERVICE_KEY`: Service key for admin operations
+- `OPENAI_API_KEY`: API key for OpenAI (optional, for LLM features)
+- `ANTHROPIC_API_KEY`: API key for Anthropic (optional, for LLM features)
+- `OPENROUTER_API_KEY`: API key for OpenRouter (optional, for LLM features)
+
+## Technical Decisions
+
+### Authentication
+- Supabase Auth for authentication
+- JWT tokens for API authentication
+- Row Level Security (RLS) for data security
+
+### Database
+- PostgreSQL via Supabase
+- Row Level Security for multi-tenant data isolation
+- User, Project, Analysis, Finding, Recommendation tables
+
+### API Design
+- RESTful API with FastAPI
+- JSON response format
+- JWT authentication
+- Error handling with appropriate status codes
+
+### Frontend Styling
+- Tailwind CSS for utility-first styling
+- Shadcn/ui components as foundation
+- Custom theme with dark/light mode
+- Responsive design for mobile/desktop
+
+### Form Implementation
+- React Hook Form for form state management
+- Zod for validation schemas
+- Dialog-based forms for editing
+- Toast notifications for feedback
+
+### Animation Strategy
+- Framer Motion for animations
+- Micro-interactions for feedback
+- Page transitions for navigation
+- Reduced motion support for accessibility
+
+## Technical Constraints
+
+### Performance
+- Optimized bundle size for frontend
+- Efficient data fetching with React Query
+- Caching strategies for API responses
+- Lazy loading for components
+
+### Security
+- HTTPS for all communications

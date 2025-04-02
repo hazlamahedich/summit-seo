@@ -19,10 +19,31 @@ flake8>=7.0.0
 types-requests>=2.31.0
 types-beautifulsoup4>=4.12.0
 
+# API Dependencies
+fastapi>=0.95.0
+uvicorn>=0.21.1
+sqlalchemy>=2.0.7
+alembic>=1.10.3
+python-multipart>=0.0.6
+bcrypt>=4.0.1
+pyjwt>=2.6.0
+passlib>=1.7.4
+email-validator>=2.0.0
+
+# Supabase Integration
+supabase>=1.0.3
+psycopg2-binary>=2.9.6
+python-jose>=3.3.0
+psutil>=5.9.0
+
 # Additional dependencies
 aiohttp>=3.9.0
 python-dotenv>=1.0.0
 click>=8.1.0
 rich>=13.7.0
 tqdm>=4.66.0
-httpx>=0.26.0 
+httpx>=0.26.0
+
+# LiteLLM Integration
+litellm>=1.18.0
+tiktoken>=0.5.1 

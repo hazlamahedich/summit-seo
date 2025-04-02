@@ -1,0 +1,93 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.7.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        
+    - name: Add SSH host key
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+        
+    - name: Copy files to server
+      run: |
+        rsync -azP --exclude='.git' \
+                   --exclude='node_modules' \
+                   --exclude='__pycache__' \
+                   --exclude='.pytest_cache' \
+                   --exclude='venv' \
+                   --exclude='.env' \
+                   --exclude='.env.production' \
+                   --exclude='nginx/ssl' \
+                   . ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
+        
+    - name: Create .env file
+      run: |
+        ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cat > ${{ secrets.DEPLOY_PATH }}/.env << 'EOL'
+        DATABASE_URL=${{ secrets.DATABASE_URL }}
+        SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}
+        SUPABASE_SERVICE_KEY=${{ secrets.SUPABASE_SERVICE_KEY }}
+        ENVIRONMENT=production
+        LOG_LEVEL=info
+        DEBUG=false
+        CORS_ORIGINS=${{ secrets.CORS_ORIGINS }}
+        NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+        NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        LITELLM_API_KEY=${{ secrets.LITELLM_API_KEY }}
+        LITELLM_DEFAULT_MODEL=${{ secrets.LITELLM_DEFAULT_MODEL }}
+        LITELLM_CACHE_ENABLE=true
+        OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}
+        SESSION_SECRET=${{ secrets.SESSION_SECRET }}
+        TOKEN_EXPIRY=3600
+        REFRESH_TOKEN_EXPIRY=2592000
+        PASSWORD_SALT_ROUNDS=10
+        RATE_LIMIT_WINDOW_MS=60000
+        RATE_LIMIT_MAX_REQUESTS=100
+        ENABLE_PROMETHEUS=true
+        PROMETHEUS_PORT=9090
+        SENTRY_DSN=${{ secrets.SENTRY_DSN }}
+        LOG_FILE_PATH=/app/logs/summit-seo.log
+        LOG_ROTATION=daily
+        EOL"
+        
+    - name: Deploy with Docker Compose
+      run: |
+        ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cd ${{ secrets.DEPLOY_PATH }} && chmod +x deploy.sh && ./deploy.sh"
+        
+    - name: Check deployment status
+      run: |
+        ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cd ${{ secrets.DEPLOY_PATH }} && docker-compose ps"
+        
+    - name: Send notification on success
+      if: success()
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_TITLE: "✅ Summit SEO Deploy Success"
+        SLACK_MESSAGE: "Deployment to production was successful"
+        SLACK_COLOR: good
+        
+    - name: Send notification on failure
+      if: failure()
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_TITLE: "❌ Summit SEO Deploy Failed"
+        SLACK_MESSAGE: "Deployment to production failed"
+        SLACK_COLOR: danger 

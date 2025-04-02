@@ -1,16 +1,37 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from pydantic import BaseModel, EmailStr
-from typing import List, Optional
+from typing import List, Optional, Dict
 import copy
+import hashlib
 
 # Import the auth router's components
-from .auth import User, get_current_user, fake_users_db, get_password_hash
+from .auth import get_current_user
+from ..schemas.user import User, UserResponse
 
 # Import pagination and response models (will create later)
 from ..models.common import PaginatedResponse
 
 # Router definition
 router = APIRouter()
+
+# Mock user database for testing
+fake_users_db: Dict[str, dict] = {
+    "testuser": {
+        "id": 1,
+        "username": "testuser",
+        "email": "testuser@example.com",
+        "full_name": "Test User",
+        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",  # "password"
+        "role": "admin",
+        "is_active": True,
+        "is_superuser": False
+    }
+}
+
+# Mock password hasher function
+def get_password_hash(password: str) -> str:
+    """Simple password hashing function for testing"""
+    return hashlib.sha256(password.encode()).hexdigest()
 
 # Pydantic models
 class UserUpdate(BaseModel):
@@ -20,9 +41,6 @@ class UserUpdate(BaseModel):
 class UserUpdateAdmin(UserUpdate):
     role: Optional[str] = None
     is_active: Optional[bool] = None
-    
-class UserResponse(User):
-    pass
     
 class UserListResponse(PaginatedResponse):
     data: List[UserResponse]
